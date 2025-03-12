@@ -8,7 +8,7 @@ import path from "path"
 
 import { connectDB } from "./lib/db.js"
 
-import authRoutes from "./routes/auth.route.js";
+import authRoutes from "./routes/auth.route..js";
 import messageRoutes from "./routes/message.route.js";
 import { app , server } from "./lib/socket.js";
 
@@ -37,7 +37,7 @@ app.use("/api/messages", messageRoutes);
    });
  }
 
-server.listen(PORT,(=>{
+server.listen(PORT,()=>{
   console.log("SERVER is running on port " + PORT);
   connectDB();
-})) 
+}) 
