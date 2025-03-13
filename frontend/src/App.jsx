@@ -1,10 +1,10 @@
 import React from 'react'
+import SidebarSkeleton from './components/skeletons/SidebarSkeleton'
 
 export default function App() {
   return (
     <>
-    <div className="text-red-500">App</div>
-    <button className='btn btn-ghost'>it is a button</button>
+    <SidebarSkeleton/>
     </>
   )
 }
