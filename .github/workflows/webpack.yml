@@ -23,7 +23,8 @@ jobs:
         node-version: ${{ matrix.node-version }}
 
     - name: Build
-      run: |
-        cd backend
-        npm install
-        node src/index.js
+      run: npm install --prefix backend && npm install --prefix frontend && npm run build --prefix frontend
+
+    - name: Start
+      run: npm run start --prefix backend
+    
