@@ -7,7 +7,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
+  development:
     runs-on: ubuntu-latest
 
     strategy:
@@ -22,9 +22,13 @@ jobs:
       with:
         node-version: ${{ matrix.node-version }}
 
-    - name: Build
-      run: npm install --prefix backend && npm install --prefix frontend && npm run build --prefix frontend
+    - name: Install Dependencies
+      run: |
+        npm install --prefix backend
+        npm install --prefix frontend
 
-    - name: Start
-      run: npm run start --prefix backend
+    - name: Start Development Servers
+      run: |
+        npm run dev --prefix backend &
+        npm run dev --prefix frontend
     
