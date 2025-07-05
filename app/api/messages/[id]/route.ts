@@ -5,7 +5,7 @@ import Message from '@/models/message.model'
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const authResult = await authenticateUser(request)
@@ -23,7 +23,7 @@ export async function GET(
       )
     }
 
-    const { id: otherUserId } = params
+    const { id: otherUserId } = await params
 
     if (!otherUserId) {
       return NextResponse.json(

@@ -7,7 +7,7 @@ import { SendMessageData } from '@/types'
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const authResult = await authenticateUser(request)
@@ -25,7 +25,7 @@ export async function POST(
       )
     }
 
-    const { id: receiverId } = params
+    const { id: receiverId } = await params
     const { text, image }: SendMessageData = await request.json()
 
     if (!text && !image) {
