@@ -1,83 +1,104 @@
 'use client'
+import { useState } from "react";
+import { useAuthStore } from "@/store/authStore";
+import { Camera, Mail, User } from "lucide-react";
 
-import { useAuth } from '@/hooks/useAuth'
-import { useRouter } from 'next/navigation'
-import { useEffect } from 'react'
-import { Loader } from 'lucide-react'
+const Profile = () => {
+  const { authUser, isUpdatingProfile, updateProfile } = useAuthStore();
+  const [selectedImg, setSelectedImg] = useState<string | null>(null);
 
-export default function ProfilePage() {
-  const { user, isLoading } = useAuth()
-  const router = useRouter()
+  if (!authUser) return null;
 
-  useEffect(() => {
-    if (!isLoading && !user) {
-      router.push('/login')
-    }
-  }, [user, isLoading, router])
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <Loader className="size-10 animate-spin" />
-      </div>
-    )
-  }
+    const reader = new FileReader();
 
-  if (!user) {
-    return null
-  }
+    reader.readAsDataURL(file);
+
+    reader.onload = async () => {
+      const base64Image = reader.result as string;
+      setSelectedImg(base64Image);
+      await updateProfile({ profilePic: base64Image });
+    };
+  };
 
   return (
-    <div className="min-h-screen bg-base-200 pt-20">
-      <div className="max-w-2xl mx-auto p-6">
-        <div className="bg-base-100 rounded-lg shadow-lg p-8">
-          <h1 className="text-3xl font-bold mb-8">Profile</h1>
-          
+    <div className="h-screen pt-20">
+      <div className="max-w-2xl mx-auto p-4 py-8">
+        <div className="bg-base-300 rounded-xl p-6 space-y-8">
+          <div className="text-center">
+            <h1 className="text-2xl font-semibold ">Profile</h1>
+            <p className="mt-2">Your profile information</p>
+          </div>
+
+          {/* avatar upload section */}
+
+          <div className="flex flex-col items-center gap-4">
+            <div className="relative">
+              <img
+                src={selectedImg || authUser.profilePic || "/avatar.png"}
+                alt="Profile"
+                className="size-32 rounded-full object-cover border-4 "
+              />
+              <label
+                htmlFor="avatar-upload"
+                className={`
+                  absolute bottom-0 right-0 
+                  bg-base-content hover:scale-105
+                  p-2 rounded-full cursor-pointer 
+                  transition-all duration-200
+                  ${isUpdatingProfile ? "animate-pulse pointer-events-none" : ""}
+                `}
+              >
+                <Camera className="w-5 h-5 text-base-200" />
+                <input
+                  type="file"
+                  id="avatar-upload"
+                  className="hidden"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  disabled={isUpdatingProfile}
+                />
+              </label>
+            </div>
+            <p className="text-sm text-zinc-400">
+              {isUpdatingProfile ? "Uploading..." : "Click the camera icon to update your photo"}
+            </p>
+          </div>
+
           <div className="space-y-6">
-            <div className="flex items-center gap-4">
-              <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center">
-                {user.profilePic ? (
-                  <img src={user.profilePic} alt={user.fullName} className="w-20 h-20 rounded-full" />
-                ) : (
-                  <span className="text-primary font-bold text-2xl">
-                    {user.fullName.charAt(0).toUpperCase()}
-                  </span>
-                )}
+            <div className="space-y-1.5">
+              <div className="text-sm text-zinc-400 flex items-center gap-2">
+                <User className="w-4 h-4" />
+                Full Name
               </div>
-              <div>
-                <h2 className="text-xl font-semibold">{user.fullName}</h2>
-                <p className="text-base-content/60">{user.email}</p>
-              </div>
+              <p className="px-4 py-2.5 bg-base-200 rounded-lg border">{authUser.fullName || "-"}</p>
             </div>
 
-            <div className="space-y-4">
-              <div>
-                <label className="label">
-                  <span className="label-text font-medium">Full Name</span>
-                </label>
-                <input
-                  type="text"
-                  value={user.fullName}
-                  className="input input-bordered w-full"
-                  disabled
-                />
+            <div className="space-y-1.5">
+              <div className="text-sm text-zinc-400 flex items-center gap-2">
+                <Mail className="w-4 h-4" />
+                Email Address
               </div>
+              <p className="px-4 py-2.5 bg-base-200 rounded-lg border">{authUser.email || "-"}</p>
+            </div>
+          </div>
 
-              <div>
-                <label className="label">
-                  <span className="label-text font-medium">Email</span>
-                </label>
-                <input
-                  type="email"
-                  value={user.email}
-                  className="input input-bordered w-full"
-                  disabled
-                />
+          {/* Removed Member Since (createdAt) section as it's not available in authUser */}
+          <div className="mt-6 bg-base-300 rounded-xl p-6">
+            <h2 className="text-lg font-medium  mb-4">Account Information</h2>
+            <div className="space-y-3 text-sm">
+              <div className="flex items-center justify-between py-2">
+                <span>Account Status</span>
+                <span className="text-green-500">Active</span>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  )
-} 
+  );
+};
+export default Profile;
