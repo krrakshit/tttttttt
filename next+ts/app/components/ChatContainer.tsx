@@ -1,7 +1,7 @@
 'use client'
 import { useChatStore } from "@/store/messageStore";
 import { useEffect, useRef } from "react";
-
+import Image from "next/image";
 import ChatHeader from "./ChatHeader";
 import MessageInput from "./MessageInput";
 import MessageSkeleton from "./skeletons/MessageSkeleton";
@@ -26,7 +26,7 @@ const ChatContainer = () => {
     getMessages(selectedUser._id);
     subscribeToMessages();
     return () => unsubscribeFromMessages();
-  }, [selectedUser?._id, getMessages, subscribeToMessages, unsubscribeFromMessages]);
+  }, [selectedUser, selectedUser?._id, getMessages, subscribeToMessages, unsubscribeFromMessages]);
 
   useEffect(() => {
     if (messageEndRef.current && messages) {
@@ -62,7 +62,7 @@ const ChatContainer = () => {
             >
               <div className=" chat-image avatar">
                 <div className="size-10 rounded-full border">
-                  <img
+                  <Image
                     src={
                       isOwnMessage
                         ? authUser.profilePic || "/avatar.png"
@@ -79,7 +79,7 @@ const ChatContainer = () => {
               </div>
               <div className="chat-bubble flex flex-col">
                 {message.image && (
-                  <img
+                  <Image
                     src={message.image}
                     alt="Attachment"
                     className="sm:max-w-[200px] rounded-md mb-2"

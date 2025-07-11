@@ -1,8 +1,9 @@
 'use client'
 import { useRef, useState } from "react";
 import { useChatStore } from "@/store/messageStore";
-import { Image, Send, X } from "lucide-react";
+import { Image as Image2, Send, X } from "lucide-react";
 import toast from "react-hot-toast";
+import Image from "next/image";
 
 const MessageInput = () => {
   const [text, setText] = useState("");
@@ -56,7 +57,7 @@ const MessageInput = () => {
       {imagePreview && (
         <div className="mb-3 flex items-center gap-2">
           <div className="relative">
-            <img
+            <Image
               src={imagePreview}
               alt="Preview"
               className="w-20 h-20 object-cover rounded-lg border border-zinc-700"
@@ -96,7 +97,7 @@ const MessageInput = () => {
                      ${imagePreview ? "text-emerald-500" : "text-zinc-400"}`}
             onClick={() => fileInputRef.current?.click()}
           >
-            <Image size={20} />
+            <Image2 size={20} />
           </button>
         </div>
         <button

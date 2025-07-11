@@ -1,7 +1,8 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Message, SendMessageData } from '@/types/message'
+import { Message } from '@/types/messages'
+import {SendMessageData} from '@/types/index'
 import { AuthUser } from '@/types/auth'
 import { useSocket } from './useSocket'
 import toast from 'react-hot-toast'
